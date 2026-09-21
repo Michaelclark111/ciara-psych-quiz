@@ -1,2 +1,3 @@
-# ciara-psych-quiz
-Psych Nursing Hard Practice quiz for Ciara — static single-file site
+# Psych Nursing Hard Practice — Ciara
+
+Static single-file quiz (32 hard psych/mental-health nursing questions).
