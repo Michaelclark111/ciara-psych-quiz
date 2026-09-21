@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Psych Nursing Hard Practice — Ciara</title>
+<style>
+:root {
+  --bg: #f4f6f9;
+  --card: #ffffff;
+  --text: #1a1d26;
+  --muted: #5c6578;
+  --border: #d8dee9;
+  --primary: #2f5bea;
+  --primary-hover: #2448c7;
+  --correct: #0d7a4f;
+  --correct-bg: #e6f7ef;
+  --correct-border: #7dd3a8;
+  --incorrect: #b42318;
+  --incorrect-bg: #fef3f2;
+  --incorrect-border: #f5a9a3;
+  --trap-bg: #fff8e6;
+  --trap-border: #f0d78c;
+  --priority: #7c3aed;
+  --sata: #0e7490;
+  --sba: #2563eb;
+  --shadow: 0 2px 12px rgba(26, 29, 38, 0.08);
+  --radius: 14px;
+  --tap: 48px;
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.55;
+  min-height: 100vh;
+}
+.app {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 1rem 1rem 3rem;
+}
+header.app-header {
+  text-align: center;
+  padding: 1.25rem 0.5rem 0.75rem;
+}
+header.app-header h1 {
+  margin: 0 0 0.35rem;
+  font-size: clamp(1.25rem, 4vw, 1.65rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+header.app-header p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+.progress-wrap {
+  margin: 1rem 0 1.25rem;
+}
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  color: var(--muted);
+  margin-bottom: 0.4rem;
+  font-weight: 600;
+}
+.progress-bar {
+  height: 8px;
+  background: var(--border);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), #6366f1);
+  border-radius: 999px;
+  transition: width 0.25s ease;
+  width: 0%;
+}
+.card {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  padding: 1.25rem 1.15rem 1.35rem;
+}
+.type-badge {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.28rem 0.65rem;
+  border-radius: 999px;
+  margin-bottom: 0.85rem;
+  color: #fff;
+}
+.type-badge.sba { background: var(--sba); }
+.type-badge.sata { background: var(--sata); }
+.type-badge.priority { background: var(--priority); }
+.stem {
+  font-size: 1.05rem;
+  margin: 0 0 1.15rem;
+  font-weight: 500;
+}
+.stem strong { font-weight: 700; }
+.choices {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+.choice {
+  position: relative;
+}
+.choice label {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  min-height: var(--tap);
+  padding: 0.85rem 1rem;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  background: #fafbfd;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.choice label:hover {
+  border-color: #a8b4d4;
+  background: #f0f4ff;
+}
+.choice input {
+  margin-top: 0.2rem;
+  width: 1.2rem;
+  height: 1.2rem;
+  flex-shrink: 0;
+  accent-color: var(--primary);
+  cursor: pointer;
+}
+.choice .letter {
+  font-weight: 700;
+  color: var(--primary);
+  min-width: 1.1rem;
+}
+.choice .choice-text {
+  flex: 1;
+  font-size: 0.98rem;
+}
+.choice.selected label {
+  border-color: var(--primary);
+  background: #eef2ff;
+  box-shadow: 0 0 0 1px rgba(47, 91, 234, 0.2);
+}
+.choice.correct-mark label {
+  border-color: var(--correct);
+  background: var(--correct-bg);
+}
+.choice.incorrect-mark label {
+  border-color: var(--incorrect);
+  background: var(--incorrect-bg);
+}
+.choice.disabled label {
+  cursor: default;
+  pointer-events: none;
+}
+.sata-hint {
+  font-size: 0.88rem;
+  color: var(--sata);
+  font-weight: 600;
+  margin: -0.5rem 0 0.85rem;
+}
+.feedback {
+  margin-top: 1.15rem;
+  padding: 1rem 1.05rem;
+  border-radius: 12px;
+  border: 1px solid;
+  display: none;
+}
+.feedback.show { display: block; }
+.feedback.ok {
+  background: var(--correct-bg);
+  border-color: var(--correct-border);
+}
+.feedback.bad {
+  background: var(--incorrect-bg);
+  border-color: var(--incorrect-border);
+}
+.feedback-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin: 0 0 0.5rem;
+}
+.feedback.ok .feedback-title { color: var(--correct); }
+.feedback.bad .feedback-title { color: var(--incorrect); }
+.feedback p {
+  margin: 0.4rem 0 0;
+  font-size: 0.95rem;
+}
+.feedback .label {
+  font-weight: 700;
+  color: var(--text);
+}
+.trap-box {
+  margin-top: 0.75rem;
+  padding: 0.75rem 0.9rem;
+  background: var(--trap-bg);
+  border: 1px solid var(--trap-border);
+  border-radius: 10px;
+  font-size: 0.92rem;
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 1.25rem;
+}
+button {
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 650;
+  min-height: var(--tap);
+  padding: 0.7rem 1.35rem;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s, opacity 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+button:active { transform: scale(0.98); }
+button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+}
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
+  flex: 1;
+  min-width: 140px;
+}
+.btn-primary:hover:not(:disabled) { background: var(--primary-hover); }
+.btn-secondary {
+  background: #e8ecf4;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover:not(:disabled) { background: #dce2ee; }
+.hidden { display: none !important; }
+
+/* Start / End screens */
+.screen-center {
+  text-align: center;
+}
+.screen-center h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1.35rem;
+}
+.screen-center .stats {
+  font-size: 1.1rem;
+  margin: 1rem 0;
+}
+.score-big {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--primary);
+  margin: 0.5rem 0;
+  letter-spacing: -0.03em;
+}
+.breakdown {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.65rem;
+  margin: 1.25rem 0;
+  text-align: center;
+}
+@media (max-width: 480px) {
+  .breakdown { grid-template-columns: 1fr; }
+}
+.breakdown .stat {
+  background: #f0f3f9;
+  border-radius: 12px;
+  padding: 0.85rem 0.5rem;
+  border: 1px solid var(--border);
+}
+.breakdown .stat .n {
+  font-size: 1.35rem;
+  font-weight: 800;
+  display: block;
+}
+.breakdown .stat .t {
+  font-size: 0.78rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  font-weight: 650;
+}
+.missed-list {
+  text-align: left;
+  margin-top: 1.5rem;
+}
+.missed-list h3 {
+  margin: 0 0 0.85rem;
+  font-size: 1.1rem;
+}
+.missed-item {
+  background: #fafbfd;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+}
+.missed-item .mq-num {
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-bottom: 0.35rem;
+}
+.missed-item .mq-stem {
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.missed-item .mq-ans {
+  font-size: 0.9rem;
+  color: var(--correct);
+  font-weight: 650;
+}
+.missed-item .mq-rat {
+  font-size: 0.88rem;
+  color: var(--muted);
+  margin-top: 0.4rem;
+}
+.perfect {
+  color: var(--correct);
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin: 1rem 0;
+}
+.intro-meta {
+  text-align: left;
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 1rem 0 1.5rem;
+  padding: 0.9rem 1rem;
+  background: #f0f3f9;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+.intro-meta ul {
+  margin: 0.4rem 0 0;
+  padding-left: 1.2rem;
+}
+footer.note {
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-top: 2rem;
+  padding: 0 0.5rem;
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="app-header">
+    <h1>Psych Nursing Hard Practice — Ciara</h1>
+    <p>Hard practice · v2 · Offline single-file quiz</p>
+  </header>
+
+  <section id="start-screen" class="card screen-center">
+    <h2>Ready to practice?</h2>
+    <div class="intro-meta">
+      <strong>32 questions</strong> covering anxiety,
